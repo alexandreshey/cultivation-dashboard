@@ -289,6 +289,14 @@ export function HistoryContent() {
         </div>
       </div>
 
+      {/* Filtros Avançados - agora logo abaixo do header */}
+      <AdvancedFilters
+        cultivations={cultivations}
+        onFilterChange={setFilteredCultivations}
+        isOpen={showAdvancedFilters}
+        onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
+      />
+
       {/* Indicador de Modo de Seleção */}
       {isSelectionMode && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -326,14 +334,6 @@ export function HistoryContent() {
       {showCharts && <HistoryCharts cultivations={cultivations} />}
       
       {/* Filtros Avançados */}
-      <div className="mb-6">
-        <AdvancedFilters
-          cultivations={cultivations}
-          onFilterChange={setFilteredCultivations}
-          isOpen={showAdvancedFilters}
-          onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
-        />
-      </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="relative flex-1">
