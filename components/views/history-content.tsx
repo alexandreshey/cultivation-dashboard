@@ -7,11 +7,13 @@ import { CultivationCard } from "@/components/cultivation-card"
 import { AggregateStats } from "@/components/dashboard/aggregate-stats"
 import { CultivationComparison } from "@/components/views/cultivation-comparison"
 import { HistoryCharts } from "@/components/charts/history-charts"
-import { AdvancedFilters } from "@/components/history/advanced-filters"
 import { mockCultivations, CultivationSummary } from "@/lib/mock-data"
 import { Search, GitCompare, Plus, BarChart3, TrendingUp, Filter } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { v4 as uuidv4 } from "uuid"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { format } from "date-fns"
 
 export function HistoryContent() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -22,7 +24,6 @@ export function HistoryContent() {
   const [isComparisonOpen, setIsComparisonOpen] = useState(false)
   const [showCharts, setShowCharts] = useState(true)
   const [isSelectionMode, setIsSelectionMode] = useState(false)
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [filteredCultivations, setFilteredCultivations] = useState<CultivationSummary[]>([])
   const [cultivations, setCultivations] = useState<CultivationSummary[]>(() => {
     if (typeof window !== "undefined") {
@@ -72,13 +73,37 @@ export function HistoryContent() {
   // Usar filtros avançados se disponíveis, senão usar filtros básicos
   const baseFilteredCultivations = filteredCultivations.length > 0 ? filteredCultivations : cultivations
 
-  const filteredAndSortedCultivations = baseFilteredCultivations
+  const [advancedFilters, setAdvancedFilters] = useState({
+    status: "all",
+    startDateFrom: "",
+    startDateTo: "",
+    strain: "",
+    minYield: "",
+    maxYield: ""
+  })
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
+  const uniqueStrains = Array.from(new Set(cultivations.map(c => c.seedStrain))).filter(Boolean)
+
+  const handleAdvancedFilterChange = (field: string, value: string) => {
+    setAdvancedFilters(prev => ({ ...prev, [field]: value }))
+  }
+  const handleClearAdvancedFilters = () => {
+    setAdvancedFilters({ status: "all", startDateFrom: "", startDateTo: "", strain: "", minYield: "", maxYield: "" })
+  }
+
+  const filteredAndSortedCultivations = cultivations
     .filter((cultivation: CultivationSummary) => {
       const matchesSearch =
         cultivation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         cultivation.seedStrain.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = filterStatus === "all" || cultivation.status === filterStatus
-      return matchesSearch && matchesStatus
+      const matchesStatus = advancedFilters.status === "all" || cultivation.status === advancedFilters.status
+      const matchesStrain = !advancedFilters.strain || cultivation.seedStrain === advancedFilters.strain
+      const matchesYield = (!advancedFilters.minYield || cultivation.yield_g >= Number(advancedFilters.minYield)) &&
+        (!advancedFilters.maxYield || cultivation.yield_g <= Number(advancedFilters.maxYield))
+      const matchesStartDateFrom = !advancedFilters.startDateFrom || new Date(cultivation.startDate) >= new Date(advancedFilters.startDateFrom)
+      const matchesStartDateTo = !advancedFilters.startDateTo || new Date(cultivation.startDate) <= new Date(advancedFilters.startDateTo)
+      return matchesSearch && matchesStatus && matchesStrain && matchesYield && matchesStartDateFrom && matchesStartDateTo
     })
     .sort((a: CultivationSummary, b: CultivationSummary) => {
       if (sortBy === "startDate") {
@@ -274,28 +299,66 @@ export function HistoryContent() {
             <BarChart3 className="h-4 w-4" />
             {showCharts ? "Ocultar" : "Mostrar"} Gráficos
           </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-          >
-            <Filter className="h-4 w-4" />
-            Filtros Avançados
-          </Button>
+          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                Filtros Avançados
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium mb-1">Status</label>
+                  <select className="w-full border rounded p-2" value={advancedFilters.status} onChange={e => handleAdvancedFilterChange("status", e.target.value)}>
+                    <option value="all">Todos</option>
+                    <option value="active">Ativos</option>
+                    <option value="completed">Concluídos</option>
+                    <option value="archived">Arquivados</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium mb-1">Início de (data)</label>
+                    <input type="date" className="w-full border rounded p-2" value={advancedFilters.startDateFrom} onChange={e => handleAdvancedFilterChange("startDateFrom", e.target.value)} />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium mb-1">até</label>
+                    <input type="date" className="w-full border rounded p-2" value={advancedFilters.startDateTo} onChange={e => handleAdvancedFilterChange("startDateTo", e.target.value)} />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1">Variedade/Strain</label>
+                  <select className="w-full border rounded p-2" value={advancedFilters.strain} onChange={e => handleAdvancedFilterChange("strain", e.target.value)}>
+                    <option value="">Todas</option>
+                    {uniqueStrains.map(strain => (
+                      <option key={strain} value={strain}>{strain}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium mb-1">Rendimento mín. (g)</label>
+                    <input type="number" className="w-full border rounded p-2" value={advancedFilters.minYield} onChange={e => handleAdvancedFilterChange("minYield", e.target.value)} />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium mb-1">máx. (g)</label>
+                    <input type="number" className="w-full border rounded p-2" value={advancedFilters.maxYield} onChange={e => handleAdvancedFilterChange("maxYield", e.target.value)} />
+                  </div>
+                </div>
+                <div className="flex justify-between gap-2 mt-2">
+                  <Button variant="outline" size="sm" onClick={handleClearAdvancedFilters}>Limpar</Button>
+                  <Button variant="default" size="sm" onClick={() => setIsPopoverOpen(false)}>Aplicar</Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button onClick={() => setIsNewModalOpen(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Novo Cultivo
           </Button>
         </div>
       </div>
-
-      {/* Filtros Avançados - agora logo abaixo do header */}
-      <AdvancedFilters
-        cultivations={cultivations}
-        onFilterChange={setFilteredCultivations}
-        isOpen={showAdvancedFilters}
-        onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
-      />
 
       {/* Indicador de Modo de Seleção */}
       {isSelectionMode && (
@@ -334,6 +397,9 @@ export function HistoryContent() {
       {showCharts && <HistoryCharts cultivations={cultivations} />}
       
       {/* Filtros Avançados */}
+      <div className="mb-6">
+        {/* Remover JSX do filtro antigo */}
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="relative flex-1">
