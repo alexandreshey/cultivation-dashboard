@@ -12,8 +12,7 @@
 - 💰 **Controle Financeiro**: Registre investimentos, gastos e calcule o custo por grama ou por ciclo.
 - 📋 **Relatórios PDF**: Exporte resumos dos ciclos com dados técnicos, gráficos e observações.
 - 🔔 **Alertas Inteligentes**: Receba recomendações ou avisos com base em desvios dos parâmetros ideais.
-- 🧬 **Análise Comparativa**: Compare o desempenho entre genéticas, nutrientes ou condições ambientais.
-
+- 🧬 **Análise Comparativa**: Compare o desempenho entre os ciclos.
 ---
 
 ## 🖥️ Capturas de Tela *(opcional)*
@@ -67,23 +66,8 @@ npm run dev
 🌐 Deploy
 O projeto está configurado para deploy contínuo via Netlify. A cada push no branch main, o Netlify dispara um novo build automaticamente.
 
-🧭 Roadmap
- MVP com diário de cultivo e análise básica
-
- Dashboards interativos com gráficos dinâmicos
-
- Módulo de exportação completa em PDF
-
- Integração com sensores via API (fase 2)
-
- Algoritmo preditivo para estimativa de produtividade
-
- Multi-usuário com permissões e áreas privadas
-
 👤 Autor
-Alexandre Santos Hey
-📧 alexandre.hey@email.com
-🔗 LinkedIn (substituir com seu link real)
+Alexandre S Hey
 
 ⚠️ Aviso Legal
 Este projeto possui finalidade exclusivamente educacional.
@@ -91,9 +75,6 @@ Ele não promove, incentiva ou facilita qualquer atividade ilegal relacionada ao
 Todas as funcionalidades e exemplos são pensados para contextos onde o cultivo de cannabis é regulamentado por leis locais, como para fins medicinais, científicos ou industriais.
 O uso deste software deve obedecer à legislação da jurisdição do usuário.
 
-📄 Licença
-Distribuído sob a licença MIT.
-Consulte o arquivo LICENSE para mais detalhes.
 
 ⭐ Contribuições
 Contribuições são bem-vindas!
