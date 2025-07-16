@@ -277,6 +277,65 @@ export const mockDetailedReport: DetailedCultivationReport = {
   ],
 }
 
+// Dados agronômicos mock para todos os cultivos
+export const mockAgronomicData: Record<string, AgronomicDataPoint[]> = {
+  // Cultivo #1 - OG Kush (bem-sucedido)
+  [mockCultivations[0].id]: [
+    { date: "2023-01-10", ph: 5.8, ec: 1.2, temperature_c: 24, humidity_percent: 65 },
+    { date: "2023-01-20", ph: 5.9, ec: 1.3, temperature_c: 25, humidity_percent: 60 },
+    { date: "2023-02-01", ph: 6.0, ec: 1.4, temperature_c: 23, humidity_percent: 58 },
+    { date: "2023-02-15", ph: 6.1, ec: 1.5, temperature_c: 24, humidity_percent: 55 },
+    { date: "2023-03-01", ph: 6.2, ec: 1.6, temperature_c: 26, humidity_percent: 50 },
+    { date: "2023-03-15", ph: 6.3, ec: 1.7, temperature_c: 25, humidity_percent: 48 },
+    { date: "2023-04-01", ph: 6.4, ec: 1.8, temperature_c: 24, humidity_percent: 45 },
+    { date: "2023-04-15", ph: 6.5, ec: 1.9, temperature_c: 23, humidity_percent: 42 },
+    { date: "2023-05-01", ph: 6.6, ec: 2.0, temperature_c: 22, humidity_percent: 40 },
+    { date: "2023-05-10", ph: 6.7, ec: 2.1, temperature_c: 21, humidity_percent: 38 },
+  ],
+  
+  // Cultivo #2 - White Widow (com problemas)
+  [mockCultivations[1].id]: [
+    { date: "2023-06-01", ph: 5.8, ec: 1.2, temperature_c: 24, humidity_percent: 65 },
+    { date: "2023-06-10", ph: 5.9, ec: 1.3, temperature_c: 25, humidity_percent: 60 },
+    { date: "2023-06-20", ph: 6.0, ec: 1.4, temperature_c: 23, humidity_percent: 58 },
+    { date: "2023-07-01", ph: 6.1, ec: 1.5, temperature_c: 24, humidity_percent: 55 },
+    { date: "2023-07-15", ph: 6.2, ec: 1.6, temperature_c: 26, humidity_percent: 50 },
+    { date: "2023-08-01", ph: 6.3, ec: 1.7, temperature_c: 25, humidity_percent: 48 },
+    { date: "2023-08-15", ph: 6.4, ec: 1.8, temperature_c: 24, humidity_percent: 45 },
+    { date: "2023-09-01", ph: 6.5, ec: 1.9, temperature_c: 23, humidity_percent: 42 },
+    { date: "2023-09-15", ph: 6.6, ec: 2.0, temperature_c: 22, humidity_percent: 40 },
+    { date: "2023-10-01", ph: 6.7, ec: 2.1, temperature_c: 21, humidity_percent: 38 },
+  ],
+  
+  // Cultivo #3 - Amnesia Haze (bem-sucedido)
+  [mockCultivations[2].id]: [
+    { date: "2024-01-05", ph: 5.8, ec: 1.2, temperature_c: 24, humidity_percent: 65 },
+    { date: "2024-01-15", ph: 5.9, ec: 1.3, temperature_c: 25, humidity_percent: 60 },
+    { date: "2024-01-25", ph: 6.0, ec: 1.4, temperature_c: 23, humidity_percent: 58 },
+    { date: "2024-02-05", ph: 6.1, ec: 1.5, temperature_c: 24, humidity_percent: 55 },
+    { date: "2024-02-15", ph: 6.2, ec: 1.6, temperature_c: 26, humidity_percent: 50 },
+    { date: "2024-03-01", ph: 6.3, ec: 1.7, temperature_c: 25, humidity_percent: 48 },
+    { date: "2024-03-15", ph: 6.4, ec: 1.8, temperature_c: 24, humidity_percent: 45 },
+    { date: "2024-04-01", ph: 6.5, ec: 1.9, temperature_c: 23, humidity_percent: 42 },
+    { date: "2024-04-15", ph: 6.6, ec: 2.0, temperature_c: 22, humidity_percent: 40 },
+    { date: "2024-05-01", ph: 6.7, ec: 2.1, temperature_c: 21, humidity_percent: 38 },
+  ],
+  
+  // Cultivo #4 - Gorilla Glue (ativo com anomalias)
+  [mockCultivations[3].id]: [
+    { date: "2024-06-01", ph: 5.8, ec: 1.2, temperature_c: 24, humidity_percent: 65 },
+    { date: "2024-06-10", ph: 5.9, ec: 1.3, temperature_c: 25, humidity_percent: 60 },
+    { date: "2024-06-20", ph: 6.0, ec: 1.4, temperature_c: 23, humidity_percent: 58 },
+    { date: "2024-07-01", ph: 7.2, ec: 1.5, temperature_c: 24, humidity_percent: 55 }, // pH alto - anomalia
+    { date: "2024-07-15", ph: 7.5, ec: 1.6, temperature_c: 26, humidity_percent: 50 }, // pH muito alto - anomalia crítica
+    { date: "2024-08-01", ph: 7.8, ec: 1.7, temperature_c: 25, humidity_percent: 48 }, // pH crítico
+    { date: "2024-08-15", ph: 7.2, ec: 1.8, temperature_c: 24, humidity_percent: 45 },
+    { date: "2024-09-01", ph: 6.8, ec: 1.9, temperature_c: 23, humidity_percent: 42 },
+    { date: "2024-09-15", ph: 6.5, ec: 2.0, temperature_c: 22, humidity_percent: 40 },
+    { date: "2024-10-01", ph: 6.2, ec: 2.1, temperature_c: 21, humidity_percent: 38 },
+  ],
+}
+
 // Função para buscar um relatório detalhado por ID (simulado)
 export function getDetailedReport(id: string): DetailedCultivationReport | undefined {
   // Buscar primeiro nos mocks

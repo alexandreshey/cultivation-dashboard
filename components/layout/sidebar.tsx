@@ -15,6 +15,7 @@ import {
   Menu,
   ChevronLeft,
   ChevronRight,
+  Brain,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ const navigation = [
   { id: "analytics", name: "Analytics", icon: TrendingUp },
   { id: "reports", name: "Relatórios", icon: FileText },
   { id: "history", name: "Histórico", icon: History },
+  { id: "anomalies", name: "Alertas IA", icon: Brain },
 ]
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {

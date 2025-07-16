@@ -11,6 +11,7 @@ import { ComparisonContent } from "@/components/views/comparison-content"
 import { AnalyticsContent } from "@/components/views/analytics-content"
 import { calculateResults } from "@/lib/cultivation-calculator"
 import { HistoryContent } from "@/components/views/history-content"
+import { AnomalyContent } from "@/components/views/anomaly-content"
 import { Footer } from "@/components/layout/footer"
 
 export interface SetupParams {
@@ -113,6 +114,8 @@ export default function CultivationApp() {
         return <SettingsContent />
       case "history":
         return <HistoryContent />
+      case "anomalies":
+        return <AnomalyContent />
       default:
         return <DashboardContent results={results} cycleParams={cycleParams} />
     }
@@ -121,9 +124,11 @@ export default function CultivationApp() {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-      <div className="flex-1 flex flex-col">
-        <main className="flex-1 transition-all duration-300 ease-in-out">
-          {renderContent()}
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto px-4 py-6 max-w-7xl">
+            {renderContent()}
+          </div>
         </main>
         <Footer />
       </div>

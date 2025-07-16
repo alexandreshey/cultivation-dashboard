@@ -29,6 +29,9 @@ import {
   Activity
 } from "lucide-react"
 import { InteractiveReportCharts } from "@/components/charts/interactive-report-charts"
+import { generateExecutiveSummary } from "@/lib/report-generator"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DonutChart } from "@/components/charts/donut-chart"
 
 interface InteractiveReportGeneratorProps {
   results: any
@@ -41,6 +44,7 @@ export function InteractiveReportGenerator({ results, setupParams, cycleParams, 
   const [selectedTemplate, setSelectedTemplate] = useState<string>("executive")
   const [isGenerating, setIsGenerating] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
+  const [showPresentation, setShowPresentation] = useState(false)
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
@@ -565,12 +569,20 @@ export function InteractiveReportGenerator({ results, setupParams, cycleParams, 
               {previewMode ? "Ocultar" : "Mostrar"} Prévia
             </Button>
             <Button
-              onClick={() => handleGenerateReport(selectedTemplate)}
+              onClick={() => generateExecutiveSummary(results, setupParams, cycleParams, marketParams)}
               disabled={isGenerating}
               className="flex items-center gap-2"
             >
               <Download className="h-4 w-4" />
-              {isGenerating ? "Gerando..." : "Gerar Relatório"}
+              Exportar PDF Completo
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => setShowPresentation(true)}
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              Criar
             </Button>
             <Button
               variant="outline"
@@ -632,6 +644,35 @@ export function InteractiveReportGenerator({ results, setupParams, cycleParams, 
           </Card>
         </div>
       )}
+
+      {/* Modal de Apresentação Interativa */}
+      <Dialog open={showPresentation} onOpenChange={setShowPresentation}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Apresentação Interativa</DialogTitle>
+          </DialogHeader>
+          <PresentationSlides results={results} />
+        </DialogContent>
+      </Dialog>
     </div>
   )
+} 
+
+// Exemplo mínimo funcional de PresentationSlides
+function PresentationSlides({ results }: any) {
+  const [slide, setSlide] = useState(0);
+  const slides = [
+    <div key="1">Slide 1 - Resumo Executivo</div>,
+    <div key="2">Slide 2 - Gráficos</div>,
+    <div key="3">Slide 3 - Recomendações</div>,
+  ];
+  return (
+    <div>
+      <div>{slides[slide]}</div>
+      <div className="flex justify-between mt-6">
+        <Button onClick={() => setSlide(s => Math.max(0, s - 1))} disabled={slide === 0}>Anterior</Button>
+        <Button onClick={() => setSlide(s => Math.min(slides.length - 1, s + 1))} disabled={slide === slides.length - 1}>Próximo</Button>
+      </div>
+    </div>
+  );
 } 
