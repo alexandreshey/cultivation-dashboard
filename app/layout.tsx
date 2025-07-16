@@ -8,15 +8,15 @@ import { ErrorBoundary } from '@/components/error-boundary'
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: 'Cultivation Dashboard',
-  description: 'Dashboard avançado para gestão de cultivos',
+  title: 'CannaLog',
+  description: 'Dashboard inteligente para monitoramento e análise de cultivos indoor',
   manifest: '/manifest.json',
   viewport: 'width=device-width, initial-scale=1',
   themeColor: '#10b981',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Cultivation Dashboard',
+    title: 'CannaLog',
   },
   icons: {
     icon: '/placeholder-logo.png',
@@ -36,7 +36,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#10b981" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Cultivation Dashboard" />
+        <meta name="apple-mobile-web-app-title" content="CannaLog" />
       </head>
       <body className={inter.className}>
         <ErrorBoundary>

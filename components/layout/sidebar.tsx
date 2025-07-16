@@ -104,7 +104,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
                   <Leaf className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-foreground">Cultivo Indoor</h1>
+                  <h1 className="text-lg font-bold text-foreground">CannaLog</h1>
                   <p className="text-sm text-muted-foreground">Analytics</p>
                 </div>
               </button>

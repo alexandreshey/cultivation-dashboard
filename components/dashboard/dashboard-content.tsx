@@ -10,7 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { KPICards } from "@/components/dashboard/kpi-cards"
 import { DonutChart } from "@/components/charts/donut-chart"
 import { TimelineChart } from "@/components/charts/timeline-chart"
-import { FinancialSummary } from "@/components/dashboard/financial-summary"
 import { PageContainer } from "@/components/layout/page-container"
 import { AnomalyAlerts } from "@/components/anomaly-alerts"
 import { AnomalyLearningStatus } from "@/components/anomaly-learning-status"
@@ -206,9 +205,6 @@ export function DashboardContent({ results, cycleParams }: DashboardContentProps
           />
         </div>
       </div>
-
-      {/* Financial Summary */}
-      <FinancialSummary results={results} />
 
       {/* Modal de explicação das métricas (detalhado) */}
       <Dialog open={!!modal} onOpenChange={() => setModal(null)}>
