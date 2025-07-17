@@ -52,11 +52,11 @@ export function ReportsContent({ results, setupParams, cycleParams, marketParams
                 <BarChart3 className="h-3 w-3 mr-1" />
                 Novo: Relatórios Interativos
               </Badge>
+              <Badge className={reportStatus.color}>
+                {reportStatus.icon} Projeto {reportStatus.status}
+              </Badge>
             </div>
           </div>
-          <Badge className={reportStatus.color}>
-            {reportStatus.icon} Projeto {reportStatus.status}
-          </Badge>
         </div>
       </div>
 
@@ -89,8 +89,11 @@ export function ReportsContent({ results, setupParams, cycleParams, marketParams
       </div>
 
       <Tabs defaultValue="interactive" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="interactive">Relatórios Interativos</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 overflow-x-auto gap-x-1 px-1">
+          <TabsTrigger value="interactive">
+            <span className="sm:hidden">Relatórios</span>
+            <span className="hidden sm:inline">Relatórios Interativos</span>
+          </TabsTrigger>
           <TabsTrigger value="automated">Automação</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>

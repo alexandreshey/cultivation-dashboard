@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  cultivations Cultivation[]
+  events       CultivationEvent[]
+  incidents    Incident
+  @@map("users")
+}
+
+model Cultivation {
+  id          String   @id @default(cuid())
+  name        String
+  seedStrain  String
+  startDate   DateTime
+  endDate     DateTime?
+  status      String   @default("active") // active, completed, archived
+  yield_g     Float    @default(0)
+  profit_brl  Float    @default(0)
+  durationDays Int     @default(0)
+  hasSevereProblems Boolean @default(false)
+  
+  // Parâmetros de setup
+  area_m2                    Float @default(2.25)
+  custo_equip_iluminacao     Float @default(200)
+  custo_tenda_estrutura      Float @default(150)
+  custo_ventilacao_exaustao  Float @default(800)
+  custo_outros_equipamentos  Float @default(500)
+  
+  // Parâmetros do ciclo
+  potencia_watts             Int @default(480)
+  producao_por_planta_g      Float @default(80)
+  dias_vegetativo            Int @default(60)
+  dias_veg                  Int @default(18)
+  dias_racao                Int @default(70)
+  horas_luz_flor             Int @default(12)
+  dias_secagem_cura          Int @default(20)
+  
+  // Parâmetros de mercado
+  preco_kwh                  Float @default(0.95)
+  custo_sementes_clones      Float @default(50)
+  custo_substrato            Float @default(120)
+  custo_nutrientes           Float @default(350)
+  custos_operacionais_misc   Float @default(10)
+  preco_venda_por_grama      Float @default(45)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamentos
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  events    CultivationEvent[]
+  incidents Incident[]
+  
+  @@map("cultivations")
+}
+
+model CultivationEvent {
+  id          String   @id @default(cuid())
+  type        String   // start_veg, start_flor, harvest, irrigation, fertilization, etc.
+  title       String
+  description String?
+  date        DateTime
+  photos      String // URLs das fotos
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relacionamentos
+  cultivationId String
+  cultivation   Cultivation @relation(fields: [cultivationId], references: [id], onDelete: Cascade)
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("cultivation_events")
+}
+
+model Incident {
+  id              String   @id @default(cuid())
+  type            String   // pest, disease, nutrient_deficiency, environmental_stress, other
+  severity        String   // low, medium, high
+  description     String
+  correctiveAction String?
+  date            DateTime
+  photoUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relacionamentos
+  cultivationId String
+  cultivation   Cultivation @relation(fields: [cultivationId], references: [id], onDelete: Cascade)
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("incidents")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // alert, warning, info, success
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@map("notifications")
+}

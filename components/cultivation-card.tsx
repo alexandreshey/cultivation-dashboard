@@ -72,7 +72,7 @@ export function CultivationCard({ cultivation, onSelect, isSelected, maxProfit, 
         onClick={handleCardClick}
       >
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-2">
               {onSelect && (
                 <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export function CultivationCard({ cultivation, onSelect, isSelected, maxProfit, 
                   )}
                 </div>
               )}
-              <CardTitle className="text-lg">{cultivation.name}</CardTitle>
+              <CardTitle className="text-lg break-words max-w-full">{cultivation.name}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
               {/* Status com ícone e tooltip */}
@@ -154,7 +154,7 @@ export function CultivationCard({ cultivation, onSelect, isSelected, maxProfit, 
         <CardFooter className="pt-3">
           <div className="w-full flex justify-center items-center">
             <span
-              className={`text-2xl font-extrabold whitespace-nowrap drop-shadow-sm flex items-center gap-1 ${
+              className={`text-2xl font-extrabold break-words text-center whitespace-pre-line drop-shadow-sm flex items-center gap-1 ${
                 cultivation.profit_brl > 0 ? "text-green-700" : "text-red-600"
               }`}
             >

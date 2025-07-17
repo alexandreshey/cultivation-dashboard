@@ -86,15 +86,17 @@ export function ComparisonContent({ setupParams, cycleParams, marketParams }: Co
     <div className="p-8">
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Comparação de Cenários</h1>
             <p className="text-muted-foreground mt-2">Compare diferentes configurações e encontre a melhor opção</p>
           </div>
-          <Button onClick={addScenario} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Adicionar Cenário
-          </Button>
+          <div className="w-full sm:w-auto">
+            <Button onClick={addScenario} className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+              <Plus className="h-4 w-4" />
+              Adicionar Cenário
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -175,15 +177,15 @@ export function ComparisonContent({ setupParams, cycleParams, marketParams }: Co
               ) : (
                 <div className="space-y-4">
                   {/* KPIs */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="text-center p-3 bg-green-50 dark:bg-green-950 rounded-lg">
-                      <div className="text-lg font-bold text-green-600">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="text-center p-3 bg-green-50 dark:bg-green-950 rounded-lg w-full">
+                      <div className="text-lg font-bold text-green-600 break-words">
                         {formatCurrency(scenario.results.lucro_liquido_ciclo)}
                       </div>
                       <div className="text-xs text-green-700 dark:text-green-300">Lucro/Ciclo</div>
                     </div>
-                    <div className="text-center p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                      <div className="text-lg font-bold text-blue-600">
+                    <div className="text-center p-3 bg-blue-50 dark:bg-blue-950 rounded-lg w-full">
+                      <div className="text-lg font-bold text-blue-600 break-words">
                         {scenario.results.roi_investimento_1_ano.toFixed(1)}%
                       </div>
                       <div className="text-xs text-blue-700 dark:text-blue-300">ROI Anual</div>

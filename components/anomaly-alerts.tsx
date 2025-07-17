@@ -189,76 +189,26 @@ export function AnomalyAlerts({
         {anomalies.map((anomaly) => (
           <Alert 
             key={anomaly.id} 
-            className={`border-l-4 ${severityColors[anomaly.severity]}`}
+            className={`border-l-4 ${severityColors[anomaly.severity]} p-3 sm:p-4`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-3 flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 w-full">
+              <div className="flex items-start gap-3 flex-1 w-full">
                 <div className="flex items-center gap-2 mt-1">
                   {getParameterIcon(anomaly.parameter)}
                   {getDirectionIcon(anomaly.currentValue, anomaly.expectedValue)}
                 </div>
-                
-                <div className="flex-1">
-                  <AlertDescription className="font-medium mb-2">
-                    {anomaly.message}
+                <div>
+                  <div className="font-semibold text-sm">{anomaly.parameter}</div>
+                  <AlertDescription className="text-xs">
+                    Valor atual: <span className="font-bold">{anomaly.currentValue}</span> | Esperado: <span className="font-bold">{anomaly.expectedValue}</span>
                   </AlertDescription>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground mb-3">
-                    <div>
-                      <span className="font-medium">Valor Atual:</span> {anomaly.currentValue.toFixed(2)}
-                    </div>
-                    <div>
-                      <span className="font-medium">Valor Ideal:</span> {anomaly.expectedValue.toFixed(2)}
-                    </div>
-                    <div>
-                      <span className="font-medium">Desvio:</span> {anomaly.deviationPercent.toFixed(1)}%
-                    </div>
-                    <div>
-                      <span className="font-medium">Fase:</span> {anomaly.phase}
-                    </div>
-                  </div>
-
-                  {anomaly.suggestedAction && (
-                    <div className="bg-blue-50 p-3 rounded-md border border-blue-200">
-                      <p className="text-sm font-medium text-blue-800 mb-1">
-                        Sugestão de Ação:
-                      </p>
-                      <p className="text-sm text-blue-700">
-                        {anomaly.suggestedAction}
-                      </p>
-                    </div>
-                  )}
+                  <div className="text-xs mt-1">{anomaly.message}</div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 ml-4">
-                <Badge 
-                  variant={anomaly.severity === "critical" ? "destructive" : "secondary"}
-                  className="flex items-center gap-1"
-                >
-                  {getSeverityIcon(anomaly.severity)}
-                  {anomaly.severity}
-                </Badge>
-                
-                <div className="flex gap-1">
-                  {anomaly.actionable && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleAnomalyAction(anomaly)}
-                    >
-                      Ação
-                    </Button>
-                  )}
-                  
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => dismissAnomaly(anomaly.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-end sm:justify-center w-full sm:w-auto">
+                <Button size="icon" variant="ghost" className="text-red-600 hover:bg-red-100" onClick={() => dismissAnomaly(anomaly.id)}>
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </Alert>

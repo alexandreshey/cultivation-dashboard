@@ -36,3 +36,4 @@ next-env.d.ts
 
 # Avoid nested git repositories
 cultivation-dashboard/
+/lib/generated/prisma

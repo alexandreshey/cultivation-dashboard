@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -36,6 +36,8 @@ interface Insight {
 }
 
 export function SmartInsights({ cultivation, events, allCultivations }: SmartInsightsProps) {
+  const [showActionModal, setShowActionModal] = useState<null | Insight>(null)
+  const [actionText, setActionText] = useState("")
   const insights = useMemo(() => {
     const insights: Insight[] = []
     
@@ -309,7 +311,7 @@ export function SmartInsights({ cultivation, events, allCultivations }: SmartIns
                   
                   {insight.actionable && (
                     <div className="flex justify-end">
-                      <Button size="sm" variant="outline" className="text-xs">
+                      <Button size="sm" variant="outline" className="text-xs" onClick={() => { setShowActionModal(insight); setActionText("") }}>
                         <Target className="h-3 w-3 mr-1" />
                         Criar Ação
                       </Button>
@@ -358,6 +360,27 @@ export function SmartInsights({ cultivation, events, allCultivations }: SmartIns
           </CardContent>
         </Card>
       </CardContent>
+
+      {/* Modal de ação */}
+      {showActionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-bold mb-2">Criar Ação para: {showActionModal.title}</h3>
+            <p className="text-sm text-muted-foreground mb-4">{showActionModal.recommendation || showActionModal.description}</p>
+            <textarea
+              className="w-full border rounded p-2 mb-4"
+              rows={3}
+              placeholder="Descreva a ação a ser tomada..."
+              value={actionText}
+              onChange={e => setActionText(e.target.value)}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowActionModal(null)}>Cancelar</Button>
+              <Button onClick={() => { setShowActionModal(null); setActionText(""); /* Aqui você pode salvar a ação */ }}>Salvar</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   )
 }

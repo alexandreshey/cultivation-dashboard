@@ -285,15 +285,15 @@ export function HistoryContent() {
         />
       )}
       
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Histórico de Cultivos</h1>
           <p className="text-gray-600 mt-2">Explore seus ciclos de cultivo passados e ativos</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
           <Button 
             variant={showCharts ? "default" : "outline"} 
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto"
             onClick={() => setShowCharts(!showCharts)}
           >
             <BarChart3 className="h-4 w-4" />
@@ -301,7 +301,7 @@ export function HistoryContent() {
           </Button>
           <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
                 <Filter className="h-4 w-4" />
                 Filtros Avançados
               </Button>
@@ -353,7 +353,7 @@ export function HistoryContent() {
               </div>
             </PopoverContent>
           </Popover>
-          <Button onClick={() => setIsNewModalOpen(true)} className="flex items-center gap-2">
+          <Button onClick={() => setIsNewModalOpen(true)} className="flex items-center gap-2 w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             Novo Cultivo
           </Button>

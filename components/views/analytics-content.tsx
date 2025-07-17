@@ -118,15 +118,15 @@ export function AnalyticsContent({ results }: AnalyticsContentProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Score Geral</span>
-                <span className="text-2xl font-bold">{performanceScore}/100</span>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6 gap-2 items-center justify-center">
+            <div className="w-full sm:w-auto">
+              <div className="flex flex-col items-center sm:flex-row sm:justify-between sm:items-center mb-2 gap-1 sm:gap-4">
+                <span className="text-sm font-medium text-center sm:text-left">Score Geral</span>
+                <span className="text-2xl font-bold text-center sm:text-left">{performanceScore}/100</span>
               </div>
-              <Progress value={performanceScore} className="h-3" />
+              <Progress value={performanceScore} className="h-3 w-full" />
             </div>
-            <div className="text-center">
+            <div className="text-center mt-2 sm:mt-0">
               <Badge
                 variant={performanceScore >= 75 ? "default" : performanceScore >= 50 ? "secondary" : "destructive"}
                 className="text-sm"

@@ -58,9 +58,9 @@ export function DonutChart({ data }: DonutChartProps) {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="relative">
-        <svg width="240" height="240" className="transform -rotate-90">
+    <div className="flex flex-col items-center justify-center sm:flex-row sm:items-start">
+      <div className="relative w-full max-w-[240px]">
+        <svg width="100%" height="240" viewBox="0 0 240 240" className="transform -rotate-90">
           {segments.map((segment) => (
             <path
               key={segment.key}
@@ -85,7 +85,7 @@ export function DonutChart({ data }: DonutChartProps) {
       </div>
 
       {/* Legend */}
-      <div className="ml-8 space-y-3">
+      <div className="mt-4 ml-0 w-full max-w-xs sm:mt-0 sm:ml-8 sm:w-auto">
         {segments.map((segment) => (
           <div
             key={segment.key}

@@ -29,17 +29,7 @@ export function Topbar({ onMenuClick, showMenuButton = false, title }: TopbarPro
       <div className="flex h-16 items-center justify-between px-4 lg:px-6">
         {/* Left Section */}
         <div className="flex items-center gap-4">
-          {showMenuButton && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onMenuClick}
-              className="lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          )}
-          
+          {/* No menu button on mobile aqui */}
           {title && (
             <div className="hidden sm:block">
               <h2 className="text-lg font-semibold text-foreground">{title}</h2>
@@ -62,6 +52,17 @@ export function Topbar({ onMenuClick, showMenuButton = false, title }: TopbarPro
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
+          {/* Menu button só no mobile, à direita */}
+          {showMenuButton && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onMenuClick}
+              className="lg:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
           {/* Theme Toggle */}
           <Button
             variant="ghost"
