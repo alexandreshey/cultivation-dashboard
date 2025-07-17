@@ -78,12 +78,11 @@ export function AnomalyContent() {
   const stats = getSystemStats()
 
   return (
-    <PageContainer
-      title="Sistema de Alertas Inteligentes"
-      description="Monitore e detecte anomalias em seus cultivos usando aprendizado de máquina"
-      maxWidth="full"
-      padding="none"
-    >
+    <div className="w-full px-4 sm:px-6 lg:px-8 pt-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Sistema de Alertas Inteligentes</h1>
+        <p className="text-gray-600 mt-2">Monitore e detecte anomalias em seus cultivos usando aprendizado de máquina</p>
+      </div>
       {/* Header com estatísticas */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <Card className="border-l-4 border-blue-500">
@@ -255,6 +254,6 @@ export function AnomalyContent() {
           </CardContent>
         </Card>
       </div>
-    </PageContainer>
+    </div>
   )
 } 

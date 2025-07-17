@@ -46,7 +46,7 @@ export function CostsContent({ results, setupParams }: CostsContentProps) {
 
   return (
     <TooltipProvider>
-      <div className="px-1 py-4">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 pt-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Análise de Custos</h1>

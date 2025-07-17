@@ -80,7 +80,7 @@ const generateId = () => Math.random().toString(36).substr(2, 9)
 // Dados Mock de Cultivos Passados
 export const mockCultivations: CultivationSummary[] = [
   {
-    id: generateId(),
+    id: "1",
     name: "Cultivo #1 - OG Kush",
     startDate: "2023-01-10",
     endDate: "2023-05-20",
@@ -92,7 +92,7 @@ export const mockCultivations: CultivationSummary[] = [
     hasSevereProblems: false,
   },
   {
-    id: generateId(),
+    id: "2",
     name: "Cultivo #2 - White Widow",
     startDate: "2023-06-01",
     endDate: "2023-10-15",
@@ -104,7 +104,7 @@ export const mockCultivations: CultivationSummary[] = [
     hasSevereProblems: true, // Exemplo de cultivo com problemas graves
   },
   {
-    id: generateId(),
+    id: "3",
     name: "Cultivo #3 - Amnesia Haze",
     startDate: "2024-01-05",
     endDate: "2024-05-15",
@@ -116,7 +116,7 @@ export const mockCultivations: CultivationSummary[] = [
     hasSevereProblems: false,
   },
   {
-    id: generateId(),
+    id: "4",
     name: "Cultivo #4 - Gorilla Glue (Ativo)",
     startDate: "2024-06-01",
     endDate: null, // Data futura para indicar ativo

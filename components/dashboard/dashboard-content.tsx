@@ -49,36 +49,36 @@ export function DashboardContent({ results, cycleParams }: DashboardContentProps
   const [modal, setModal] = useState<string | null>(null)
 
   return (
-    <PageContainer
-      title="Dashboard"
-      description="Visão geral da análise de viabilidade do cultivo indoor"
-      maxWidth="full"
-      padding="none"
-    >
+    <div className="w-full px-4 sm:px-6 lg:px-8 pt-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-2">Visão geral da análise de viabilidade do cultivo indoor</p>
+      </div>
 
       {/* Hero Image Section */}
-      <div className="relative w-full h-48 sm:h-64 lg:h-80 rounded-xl overflow-hidden shadow-lg">
-        <Image
+      <div className="relative w-full h-48 sm:h-64 lg:h-80 rounded-xl overflow-hidden shadow-lg mb-8">
+        <img
           src="/images/indoor-cultivation-overview.png"
-          alt="Indoor cannabis cultivation facility with rows of mature plants under grow lights"
-          fill
-          className="object-cover"
-          priority
+          alt="Cultivo indoor"
+          className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={400}
+          style={{ objectPosition: 'center' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end">
-          <div className="p-4 sm:p-6 lg:p-8">
-            <h2 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
-              Seu Cultivo, Seus Dados, Seu Sucesso.
-            </h2>
-            <p className="text-white/80 text-sm sm:text-base mt-2 max-w-md">
-              Monitore e otimize seu cultivo com dados precisos e insights inteligentes
-            </p>
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-4 sm:p-6 lg:p-8">
+          <h2 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+            Seu Cultivo, Seus Dados, Seu Sucesso.
+          </h2>
+          <p className="text-white/80 text-sm sm:text-base mt-2 max-w-md">
+            Monitore e otimize seu cultivo com dados precisos e insights inteligentes
+          </p>
         </div>
       </div>
 
       {/* Resumo Executivo */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <KpiCard
           icon={<DollarSign className="w-8 h-8 text-green-500" />}
           label="Lucro por Ciclo"
@@ -107,7 +107,7 @@ export function DashboardContent({ results, cycleParams }: DashboardContentProps
       </div>
 
       {/* Cards de Fluxo Financeiro e Métricas de Eficiência */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card className="border-l-4 border-green-200">
           <CardHeader>
             <CardTitle>Fluxo Financeiro</CardTitle>
@@ -246,6 +246,6 @@ export function DashboardContent({ results, cycleParams }: DashboardContentProps
           )}
         </DialogContent>
       </Dialog>
-    </PageContainer>
+    </div>
   )
 }

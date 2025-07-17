@@ -126,7 +126,7 @@ export default function CultivationApp() {
       <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 overflow-auto">
-          <div className="container mx-auto px-4 py-6 max-w-7xl">
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
             {renderContent()}
           </div>
         </main>

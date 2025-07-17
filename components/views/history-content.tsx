@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CultivationCard } from "@/components/cultivation-card"
@@ -8,13 +8,29 @@ import { AggregateStats } from "@/components/dashboard/aggregate-stats"
 import { CultivationComparison } from "@/components/views/cultivation-comparison"
 import { HistoryCharts } from "@/components/charts/history-charts"
 import { mockCultivations, CultivationSummary } from "@/lib/mock-data"
-import { Search, GitCompare, Plus, BarChart3, TrendingUp, Filter } from "lucide-react"
+import { Search, GitCompare, Plus, BarChart3, TrendingUp, Filter, Trash2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { v4 as uuidv4 } from "uuid"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
-
+import type { FormEvent } from "react"
+import { NewCultivationModal } from "@/components/forms/new-cultivation-modal"
+// Novo componente para o modal de novo cultivo
+// (declarado fora do componente HistoryContent para evitar conflitos de escopo)
+interface NewCultivationModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  values: {
+    name: string
+    seedStrain: string
+    startDate: string
+    status: "active" | "completed" | "archived"
+    yield_g: string
+  }
+  onChange: (field: string, value: string) => void
+}
 export function HistoryContent() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("startDate")
@@ -42,13 +58,30 @@ export function HistoryContent() {
     yield_g: "",
   })
 
+  // Estado de erro para cada campo do formulário de novo cultivo
+  const [newCultivationErrors, setNewCultivationErrors] = useState<{ name?: string; seedStrain?: string; startDate?: string }>({})
+
+  // Resetar o estado do formulário só quando abrir o modal (transição de fechado para aberto)
+  const prevIsNewModalOpen = useRef(isNewModalOpen)
+  useEffect(() => {
+    if (!prevIsNewModalOpen.current && isNewModalOpen) {
+      setNewCultivation({ name: "", seedStrain: "", startDate: "", status: "active", yield_g: "" })
+    }
+    prevIsNewModalOpen.current = isNewModalOpen
+  }, [isNewModalOpen])
+
   const handleNewChange = (field: string, value: string) => {
     setNewCultivation((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleNewSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newCultivation.name || !newCultivation.seedStrain || !newCultivation.startDate) return
+    const errors: { name?: string; seedStrain?: string; startDate?: string } = {}
+    if (!newCultivation.name) errors.name = "Obrigatório"
+    if (!newCultivation.seedStrain) errors.seedStrain = "Obrigatório"
+    if (!newCultivation.startDate) errors.startDate = "Obrigatório"
+    setNewCultivationErrors(errors)
+    if (Object.keys(errors).length > 0) return
     const newItem: CultivationSummary = {
       id: uuidv4(),
       name: newCultivation.name,
@@ -67,7 +100,7 @@ export function HistoryContent() {
       localStorage.setItem("cultivations", JSON.stringify(updated))
     }
     setIsNewModalOpen(false)
-    setNewCultivation({ name: "", seedStrain: "", startDate: "", status: "active", yield_g: "" })
+    setNewCultivationErrors({})
   }
 
   // Usar filtros avançados se disponíveis, senão usar filtros básicos
@@ -132,51 +165,6 @@ export function HistoryContent() {
   // Calcular estatísticas para os cards
   const maxProfit = Math.max(...cultivations.map(c => c.profit_brl))
   const avgProfit = cultivations.reduce((sum, c) => sum + c.profit_brl, 0) / cultivations.length
-
-  // Modal atualizado para usar o estado e submit
-  const NewCultivationModal = () => (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 ${isNewModalOpen ? "" : "hidden"}`}
-    >
-      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Novo Cultivo</h2>
-        <form className="space-y-4" onSubmit={handleNewSubmit}>
-          <div>
-            <label className="block text-sm font-medium mb-1">Nome do Cultivo</label>
-            <Input placeholder="Ex: Cultivo Primavera 2024" value={newCultivation.name} onChange={e => handleNewChange("name", e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Variedade/Strain</label>
-            <Input placeholder="Ex: OG Kush" value={newCultivation.seedStrain} onChange={e => handleNewChange("seedStrain", e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Data de Início</label>
-            <Input type="date" value={newCultivation.startDate} onChange={e => handleNewChange("startDate", e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Status</label>
-            <Select value={newCultivation.status} onValueChange={v => handleNewChange("status", v)}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="completed">Concluído</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex justify-end gap-2 mt-6">
-            <Button type="button" variant="outline" onClick={() => setIsNewModalOpen(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={!newCultivation.name || !newCultivation.seedStrain || !newCultivation.startDate}>
-              Salvar
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
 
   // Estado e lógica para edição de cultivo existente
   const [editCultivationId, setEditCultivationId] = useState<string | null>(null)
@@ -273,10 +261,57 @@ export function HistoryContent() {
     </div>
   )
 
+  // Estado para exclusão
+  const [deleteCultivationId, setDeleteCultivationId] = useState<string | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const openDeleteModal = (id: string) => {
+    setDeleteCultivationId(id)
+    setIsDeleteModalOpen(true)
+  }
+  const closeDeleteModal = () => {
+    setDeleteCultivationId(null)
+    setIsDeleteModalOpen(false)
+  }
+  const handleDeleteCultivation = () => {
+    if (!deleteCultivationId) return
+    const updated = cultivations.filter(c => c.id !== deleteCultivationId)
+    setCultivations(updated)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cultivations", JSON.stringify(updated))
+    }
+    closeDeleteModal()
+  }
+
+  // Modal de confirmação de exclusão
+  const DeleteCultivationModal = () => (
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 ${isDeleteModalOpen ? "" : "hidden"}`}>
+      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4 text-red-600 flex items-center gap-2"><Trash2 className="h-5 w-5" />Excluir Cultivo</h2>
+        <p className="mb-6 text-gray-700 dark:text-gray-200">Tem certeza que deseja excluir este cultivo? Esta ação não pode ser desfeita.</p>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button type="button" variant="outline" onClick={closeDeleteModal}>
+            Cancelar
+          </Button>
+          <Button type="button" variant="destructive" onClick={handleDeleteCultivation}>
+            Excluir
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <div className="p-8">
-      <NewCultivationModal />
+      <NewCultivationModal
+        open={isNewModalOpen}
+        onClose={() => setIsNewModalOpen(false)}
+        onSubmit={handleNewSubmit}
+        values={newCultivation}
+        onChange={handleNewChange}
+        errors={newCultivationErrors}
+      />
       <EditCultivationModal />
+      <DeleteCultivationModal />
       {isComparisonOpen && (
         <CultivationComparison
           cultivations={cultivations}
@@ -482,17 +517,29 @@ export function HistoryContent() {
               maxProfit={maxProfit}
               avgProfit={avgProfit}
             />
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={e => {
-                e.preventDefault(); e.stopPropagation(); openEditModal(cultivation)
-              }}
-              title="Editar Cultivo"
-            >
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm-6 6v-3.586a1 1 0 01.293-.707l9-9a1 1 0 011.414 0l3.586 3.586a1 1 0 010 1.414l-9 9a1 1 0 01-.707.293H3z"></path></svg>
-            </Button>
+            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-10">
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={e => {
+                  e.preventDefault(); e.stopPropagation(); openEditModal(cultivation)
+                }}
+                title="Editar Cultivo"
+              >
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm-6 6v-3.586a1 1 0 01.293-.707l9-9a1 1 0 011.414 0l3.586 3.586a1 1 0 010 1.414l-9 9a1 1 0 01-.707.293H3z"></path></svg>
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={e => {
+                  e.preventDefault(); e.stopPropagation(); openDeleteModal(cultivation.id)
+                }}
+                title="Excluir Cultivo"
+                className="text-red-600 hover:bg-red-50 focus-visible:ring-red-500"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>

@@ -43,7 +43,7 @@ export function PageContainer({
 }: PageContainerProps) {
   return (
     <div className={cn(
-      "w-full mx-auto space-y-6",
+      "w-full mx-auto space-y-6 pt-8",
       maxWidthClasses[maxWidth],
       paddingClasses[padding],
       className
