@@ -114,31 +114,11 @@ export function SettingsContent() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Tema</Label>
-              <Select value={theme} onValueChange={setTheme}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tema" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">
-                    <div className="flex items-center gap-2">
-                      <Sun className="h-4 w-4" />
-                      Claro
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="dark">
-                    <div className="flex items-center gap-2">
-                      <Moon className="h-4 w-4" />
-                      Escuro
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="system">
-                    <div className="flex items-center gap-2">
-                      <Monitor className="h-4 w-4" />
-                      Sistema
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2 p-3 border rounded-md bg-muted/50">
+                <Sun className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm">Modo Claro (Fixo)</span>
+              </div>
+              <p className="text-xs text-muted-foreground">O tema está configurado para sempre usar o modo claro</p>
             </div>
 
             <div className="space-y-2">
