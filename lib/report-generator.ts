@@ -5,7 +5,7 @@ import "jspdf-autotable"
 
 export async function generateExcelReport(results: any, setupParams: any, cycleParams: any, marketParams: any) {
   const csvContent = `
-Relatório de Análise Financeira - CannaLog
+Relatório de Análise Financeira - ErvApp
 Gerado em: ${new Date().toLocaleDateString("pt-BR")}
 
 RESUMO EXECUTIVO
@@ -79,7 +79,7 @@ export async function generateExecutiveSummary(results: any, setupParams: any, c
   doc.text("RESUMO EXECUTIVO", pageWidth / 2, 20, { align: "center" })
 
   doc.setFontSize(14)
-  doc.text("Análise de Viabilidade - CannaLog", pageWidth / 2, 30, { align: "center" })
+      doc.text("Análise de Viabilidade - ErvApp", pageWidth / 2, 30, { align: "center" })
 
   // Resetar cores e posição
   doc.setTextColor(0, 0, 0)
@@ -270,7 +270,7 @@ export async function generateExecutiveSummary(results: any, setupParams: any, c
   doc.setTextColor(100, 116, 139)
   doc.setFontSize(8)
   doc.text(
-    "Este documento foi gerado automaticamente pelo sistema CannaLog",
+          "Este documento foi gerado automaticamente pelo sistema ErvApp",
     pageWidth / 2,
     pageHeight - 12,
     {

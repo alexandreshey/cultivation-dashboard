@@ -1,6 +1,6 @@
-# 🌱 Cannalog
+# 🌱 ErvApp
 
-**Cannalog** é uma plataforma completa para monitoramento e análise de cultivos indoor de cannabis. O objetivo do aplicativo é oferecer aos cultivadores uma solução intuitiva e baseada em dados para gerenciar ciclos de cultivo, tomar decisões mais informadas e maximizar a eficiência e qualidade do processo.
+**ErvApp** é uma plataforma completa para monitoramento e análise de cultivos indoor de cannabis. O objetivo do aplicativo é oferecer aos cultivadores uma solução intuitiva e baseada em dados para gerenciar ciclos de cultivo, tomar decisões mais informadas e maximizar a eficiência e qualidade do processo.
 
 ---
 

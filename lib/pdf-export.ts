@@ -296,7 +296,7 @@ export class PDFExporter {
         this.pageHeight - 10
       )
       this.doc.text(
-        "Gerado por CannaLog",
+        "Gerado por ErvApp",
         this.margin,
         this.pageHeight - 10
       )
