@@ -264,7 +264,8 @@ export default function CultivationDetailPage() {
                   Informações do Cultivo
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* Informações Básicas */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Nome</p>
@@ -300,6 +301,95 @@ export default function CultivationDetailPage() {
                     <Badge variant={cultivation.hasSevereProblems ? "destructive" : "secondary"}>
                       {cultivation.hasSevereProblems ? "Sim" : "Não"}
                     </Badge>
+                  </div>
+                </div>
+
+                {/* Progresso do Ciclo */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-muted-foreground">Progresso do Ciclo</p>
+                    <Badge variant="outline" className="text-xs">
+                      {(() => {
+                        const startDate = new Date(cultivation.startDate)
+                        const endDate = cultivation.endDate ? new Date(cultivation.endDate) : new Date()
+                        const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                        const elapsedDays = Math.ceil((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                        const progress = Math.min(Math.max((elapsedDays / totalDays) * 100, 0), 100)
+                        return `${Math.round(progress)}%`
+                      })()}
+                    </Badge>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                      style={{ 
+                        width: `${(() => {
+                          const startDate = new Date(cultivation.startDate)
+                          const endDate = cultivation.endDate ? new Date(cultivation.endDate) : new Date()
+                          const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                          const elapsedDays = Math.ceil((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                          const progress = Math.min(Math.max((elapsedDays / totalDays) * 100, 0), 100)
+                          return progress
+                        })()}%` 
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Fase Atual e Dias Restantes */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Fase Atual</p>
+                    <Badge variant="secondary" className="mt-1">
+                      {(() => {
+                        const startDate = new Date(cultivation.startDate)
+                        const elapsedDays = Math.ceil((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                        
+                        if (elapsedDays <= 60) return "Vegetativo"
+                        if (elapsedDays <= 130) return "Floração"
+                        if (elapsedDays <= 150) return "Cura"
+                        return "Finalizado"
+                      })()}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Dias Restantes</p>
+                    <p className="font-medium text-lg">
+                      {(() => {
+                        const startDate = new Date(cultivation.startDate)
+                        const totalDays = 150 // Ciclo completo estimado
+                        const elapsedDays = Math.ceil((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                        const remaining = Math.max(totalDays - elapsedDays, 0)
+                        return remaining > 0 ? `${remaining} dias` : "Finalizado"
+                      })()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Próximas Ações */}
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-muted-foreground">Próximas Ações</p>
+                  <div className="space-y-2">
+                    {(() => {
+                      const startDate = new Date(cultivation.startDate)
+                      const elapsedDays = Math.ceil((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+                      const actions = []
+                      
+                      if (elapsedDays <= 60) {
+                        actions.push("Fertilização semanal", "Controle de pH", "Ajuste de umidade")
+                      } else if (elapsedDays <= 130) {
+                        actions.push("Fertilização floração", "Controle de pragas", "Ajuste de temperatura")
+                      } else if (elapsedDays <= 150) {
+                        actions.push("Reduzir umidade", "Preparar secagem", "Colheita em breve")
+                      }
+                      
+                      return actions.map((action, index) => (
+                        <div key={index} className="flex items-center gap-2 text-sm">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                          <span>{action}</span>
+                        </div>
+                      ))
+                    })()}
                   </div>
                 </div>
               </CardContent>

@@ -92,20 +92,23 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
         )}
       >
         {/* Header com toggle */}
-        <div className="p-4 border-b border-border">
+        <div className={cn(
+          "border-b border-border",
+          isOpen ? "p-4" : "p-2"
+        )}>
           <div className="flex items-center justify-between">
             {isOpen ? (
               <button
                 onClick={handleLogoClick}
-                className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+                className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
                 aria-label="Ir para página inicial"
               >
-                <div className="p-2 bg-green-600 rounded-lg">
-                  <Leaf className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-foreground">CannaLog</h1>
-                  <p className="text-sm text-muted-foreground">Analytics</p>
+                <div className="bg-white rounded-lg p-3 w-48 h-12 flex items-center justify-center">
+                  <img 
+                    src="/ervapp-logo.png" 
+                    alt="ErvApp Logo" 
+                    className="h-8 w-auto object-contain"
+                  />
                 </div>
               </button>
             ) : (
@@ -114,8 +117,12 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
                 className="flex justify-center hover:opacity-80 transition-opacity cursor-pointer"
                 aria-label="Ir para página inicial"
               >
-                <div className="p-2 bg-green-600 rounded-lg">
-                  <Leaf className="h-6 w-6 text-white" />
+                <div className="bg-white rounded-lg p-1 w-10 h-10 flex items-center justify-center">
+                  <img 
+                    src="/ervapp-logo.png" 
+                    alt="ErvApp Logo" 
+                    className="h-6 w-auto object-contain"
+                  />
                 </div>
               </button>
             )}

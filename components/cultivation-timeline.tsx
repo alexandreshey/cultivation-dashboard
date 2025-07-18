@@ -60,6 +60,24 @@ const eventIcons: Record<EventType, React.ComponentType<{ className?: string }>>
   other: Info,
 }
 
+const eventNames: Record<EventType, string> = {
+  start_veg: "Início Vegetativo",
+  start_flor: "Início Floração",
+  start_cure: "Início Cura",
+  harvest: "Colheita",
+  incident: "Incidente",
+  action: "Ação",
+  irrigation: "Irrigação",
+  fertilization: "Fertilização",
+  pruning: "Poda",
+  pest_control: "Controle de Praga",
+  environmental_stress: "Estresse Ambiental",
+  nutrient_deficiency: "Deficiência Nutriente",
+  pest: "Praga",
+  disease: "Doença",
+  other: "Outro",
+}
+
 const eventColors: Record<EventType, string> = {
   start_veg: "text-green-500",
   start_flor: "text-orange-500",
@@ -86,6 +104,35 @@ interface CultivationTimelineProps {
 interface TimelineEventItemProps {
   event: CultivationEvent
   incident?: Incident | null
+}
+
+// Função utilitária para checar se algum valor está fora do ideal
+function getEventAlert(details: any) {
+  if (!details) return null;
+  const ranges = {
+    ph: { min: 5.5, max: 6.5 },
+    ec: { min: 0.8, max: 2.0 },
+    temperatura: { min: 20, max: 28 },
+    umidade: { min: 40, max: 70 },
+  };
+  const alerts: string[] = [];
+  if (details.ph !== undefined && details.ph !== "" && !isNaN(Number(details.ph))) {
+    const v = Number(details.ph);
+    if (v < ranges.ph.min || v > ranges.ph.max) alerts.push(`pH fora do ideal (${v})`);
+  }
+  if (details.ec !== undefined && details.ec !== "" && !isNaN(Number(details.ec))) {
+    const v = Number(details.ec);
+    if (v < ranges.ec.min || v > ranges.ec.max) alerts.push(`EC fora do ideal (${v})`);
+  }
+  if (details.temperatura !== undefined && details.temperatura !== "" && !isNaN(Number(details.temperatura))) {
+    const v = Number(details.temperatura);
+    if (v < ranges.temperatura.min || v > ranges.temperatura.max) alerts.push(`Temperatura fora do ideal (${v}°C)`);
+  }
+  if (details.umidade !== undefined && details.umidade !== "" && !isNaN(Number(details.umidade))) {
+    const v = Number(details.umidade);
+    if (v < ranges.umidade.min || v > ranges.umidade.max) alerts.push(`Umidade fora do ideal (${v}%)`);
+  }
+  return alerts.length > 0 ? alerts : null;
 }
 
 const TimelineEventItem = ({ event, incident }: TimelineEventItemProps) => {
@@ -181,7 +228,8 @@ export function CultivationTimeline({ events, incidents }: CultivationTimelinePr
   })
 
   const handleEdit = (event: any) => {
-    setEditingId(event.id)
+    const eventKey = event.id || event.date
+    setEditingId(eventKey)
     setEditData({ ...event })
   }
   const handleEditChange = (field: string, value: any) => {
@@ -191,11 +239,16 @@ export function CultivationTimeline({ events, incidents }: CultivationTimelinePr
     setEditData((prev: any) => ({ ...prev, details: { ...prev.details, [key]: value } }))
   }
   const handleSave = () => {
-    setLocalEvents((prev) => prev.map(ev => (ev.id || ev.date) === editingId ? { ...editData } : ev))
+    setLocalEvents((prev) => prev.map(ev => {
+      const evKey = ev.id || ev.date
+      return evKey === editingId ? { ...editData, id: evKey } : ev
+    }))
     setEditingId(null)
+    setEditData({})
   }
   const handleCancel = () => {
     setEditingId(null)
+    setEditData({})
   }
   const handleRemove = (id: string) => {
     setLocalEvents((prev) => prev.filter(ev => (ev.id || ev.date) !== id) as any)
@@ -312,12 +365,12 @@ export function CultivationTimeline({ events, incidents }: CultivationTimelinePr
               sortedEvents.map((event) => {
                 const incidentDetail = (event as any).incidentId ? incidentMap.get((event as any).incidentId) ?? null : null
                 return (
-                  <div key={event.id ?? event.date} className="mb-6 flex items-center" role="listitem">
+                  <div key={event.id ?? event.date} className="mb-6 flex items-center group" role="listitem">
                     <div className="flex-shrink-0 flex items-center justify-center h-8 w-8">
                       {React.createElement(eventIcons[event.type as EventType] || Calendar, { className: "h-5 w-5" })}
                     </div>
                     <div className="ml-4 flex-1">
-                      {editingId === event.id ? (
+                      {editingId === (event.id || event.date) ? (
                         <div className="bg-gray-50 p-3 rounded border mb-2">
                           <input type="date" className="mb-2 block w-full" value={editData.date} onChange={e => handleEditChange("date", e.target.value)} />
                           <input type="text" className="mb-2 block w-full" value={editData.description} onChange={e => handleEditChange("description", e.target.value)} placeholder="Descrição" />
@@ -336,25 +389,64 @@ export function CultivationTimeline({ events, incidents }: CultivationTimelinePr
                         </div>
                       ) : (
                         <>
-                          <div className="text-sm font-medium text-gray-900 flex items-center justify-between">
-                            {event.description}
-                            <span className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-sm font-semibold text-gray-900">
+                                  {eventNames[event.type as EventType] || "Evento"}
+                                </span>
+                                {(() => {
+                                  const alerts = getEventAlert(event.details);
+                                  if (alerts) {
+                                    return (
+                                      <span className="flex items-center gap-1 text-orange-600">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <span className="text-xs font-semibold">Alerta</span>
+                                      </span>
+                                    );
+                                  }
+                                  return null;
+                                })()}
+                              </div>
+                              
+                              {(() => {
+                                const alerts = getEventAlert(event.details);
+                                if (alerts) {
+                                  return (
+                                    <div className="mb-2 text-xs text-orange-600 font-medium flex flex-wrap gap-1">
+                                      {alerts.map((msg, idx) => (
+                                        <span key={idx} className="bg-orange-50 rounded px-2 py-0.5 border border-orange-200">{msg}</span>
+                                      ))}
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              })()}
+                              
+                              <div className="text-sm text-gray-700 mb-1">
+                                {event.description}
+                              </div>
+                              
+                              <time className="text-xs text-gray-500 block mb-1" dateTime={new Date(event.date).toISOString()}>
+                                {new Date(event.date).toLocaleDateString("pt-BR")}
+                              </time>
+                              
+                              {event.details && Object.keys(event.details).length > 0 && (
+                                <div className="text-xs text-gray-600">
+                                  {Object.entries(event.details).map(([key, value]) => (
+                                    <span key={key} className="mr-2">
+                                      <span className="font-medium capitalize">{key.replace(/([A-Z])/g, " $1").trim()}:</span> {value}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-4">
                               <button className="text-xs text-blue-600 underline" onClick={() => handleEdit(event)}>Editar</button>
                               <button className="text-xs text-red-600 underline" onClick={() => handleRemove(event.id || event.date)}>Remover</button>
-                            </span>
-                          </div>
-                          <time className="text-xs text-gray-500" dateTime={new Date(event.date).toISOString()}>
-                            {new Date(event.date).toLocaleDateString("pt-BR")}
-                          </time>
-                          {event.details && Object.keys(event.details).length > 0 && (
-                            <div className="mt-1 text-xs text-gray-600">
-                              {Object.entries(event.details).map(([key, value]) => (
-                                <span key={key} className="mr-2">
-                                  <span className="font-medium capitalize">{key.replace(/([A-Z])/g, " $1").trim()}:</span> {value}
-                                </span>
-                              ))}
                             </div>
-                          )}
+                          </div>
                           {incidentDetail && (
                             <div className="mt-2 p-2 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md text-xs text-red-800 dark:text-red-200" role="alert">
                               <p className="font-semibold">Problema: {incidentDetail.description}</p>
