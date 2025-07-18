@@ -38,7 +38,17 @@
 
 Siga os passos abaixo para executar o projeto localmente:
 
-1. **Clone o repositório:**
+# 1. Clone o repositório (substitua a URL)
+git clone https://github.com/alexandreshey/cultivation-dashboard
+
+# 2. Acesse o diretório do projeto
+cd cultivation-dashboard
+
+# 3. Instale as dependências
+npm install --force
+
+# 4. Execute o projeto 
+npm run dev
 
 👤 Autor
 Alexandre S Hey
