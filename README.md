@@ -40,32 +40,6 @@ Siga os passos abaixo para executar o projeto localmente:
 
 1. **Clone o repositório:**
 
-```bash
-git clone https://github.com/seuusuario/cannalog.git
-cd cannalog
-Instale as dependências:
-
-bash
-Copiar
-Editar
-npm install
-Configure as variáveis de ambiente:
-
-Crie um arquivo .env.local com:
-
-env
-Copiar
-Editar
-NETLIFY_DATABASE_URL=postgresql://usuario:senha@host:porta/database?sslmode=require
-Inicie o servidor de desenvolvimento:
-
-bash
-Copiar
-Editar
-npm run dev
-🌐 Deploy
-O projeto está configurado para deploy contínuo via Netlify. A cada push no branch main, o Netlify dispara um novo build automaticamente.
-
 👤 Autor
 Alexandre S Hey
 
